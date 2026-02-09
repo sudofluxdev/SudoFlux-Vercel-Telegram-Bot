@@ -25,3 +25,6 @@ build/
 
 # Vercel
 .vercel
+
+# SudoSquad
+.sudosquad/
