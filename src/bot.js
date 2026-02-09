@@ -2,7 +2,10 @@ import { Bot } from 'grammy';
 import { saveUser, getAllLeads } from './lib/db.js';
 import { adminOnly } from './middleware/admin.js';
 
-const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
+// Fallback to a dummy token if not provided (e.g. during build)
+// This prevents "Error: Empty token!" when Vercel builds the app without env vars
+const token = process.env.TELEGRAM_BOT_TOKEN || '123456789:ABCdefGHIjklMNOmcq';
+const bot = new Bot(token);
 
 // Welcome Trigger
 bot.command('start', async (ctx) => {

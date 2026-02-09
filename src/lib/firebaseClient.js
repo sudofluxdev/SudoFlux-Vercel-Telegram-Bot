@@ -11,9 +11,21 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
-const auth = getAuth(app);
-const db = getFirestore(app);
-const googleProvider = new GoogleAuthProvider();
+// Check if we have the API key (which we won't during build time without env vars)
+let app, auth, db, googleProvider;
+
+if (process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
+    app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+    auth = getAuth(app);
+    db = getFirestore(app);
+    googleProvider = new GoogleAuthProvider();
+} else {
+    // Return nulls or mocks during build time to prevent "auth/invalid-api-key" error
+    console.warn("⚠️ Firebase Client: API Key not found. Skipping initialization (expected during build).");
+    app = null;
+    auth = null;
+    db = null;
+    googleProvider = null;
+}
 
 export { auth, db, googleProvider };

@@ -1,12 +1,10 @@
-import { Bot, webhookCallback } from "grammy";
+import { webhookCallback } from "grammy";
+import bot from "../../../src/bot.js";
 import { saveUser } from "../../../src/lib/db.js";
 import { getFirestore } from "firebase-admin/firestore";
 
-const token = process.env.TELEGRAM_BOT_TOKEN;
-
-if (!token) throw new Error("TELEGRAM_BOT_TOKEN environment variable not found.");
-
-const bot = new Bot(token);
+// Removida inicialização duplicada e verificação manual de token que quebrava o build
+// O bot já é inicializado de forma segura em src/bot.js
 
 // Captura o lead ao dar /start
 bot.command("start", async (ctx) => {

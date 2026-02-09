@@ -4,19 +4,19 @@ import { getFirestore } from "firebase-admin/firestore";
 // Aqui a gente verifica se já tem uma conexão aberta para não dar erro de "App already exists"
 if (!getApps().length) {
   try {
-    const serviceAccount = JSON.parse(
-      process.env.FIREBASE_SERVICE_ACCOUNT_KEY || "{}"
-    );
-
-    if (serviceAccount.project_id) {
-      initializeApp({
-        credential: cert(serviceAccount),
-      });
+    const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+    if (serviceAccountKey) {
+      const serviceAccount = JSON.parse(serviceAccountKey);
+      if (serviceAccount.project_id) {
+        initializeApp({
+          credential: cert(serviceAccount),
+        });
+      }
     } else {
-      console.warn("⚠️ Firebase: FIREBASE_SERVICE_ACCOUNT_KEY não configurada ou inválida.");
+      console.warn("⚠️ Firebase: FIREBASE_SERVICE_ACCOUNT_KEY não configurada. (Isso é normal durante o build)");
     }
   } catch (err) {
-    console.error("❌ Firebase: Erro ao parsear FIREBASE_SERVICE_ACCOUNT_KEY:", err.message);
+    console.error("❌ Firebase: Erro ao inicializar:", err.message);
   }
 }
 

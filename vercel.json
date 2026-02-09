@@ -1,13 +1,5 @@
 {
   "version": 2,
-  "functions": {
-    "api/webhook.js": {
-      "runtime": "edge"
-    },
-    "api/scheduler.js": {
-      "runtime": "edge"
-    }
-  },
   "routes": [
     {
       "src": "/api/webhook",
@@ -21,7 +13,7 @@
   "crons": [
     {
       "path": "/api/scheduler",
-      "schedule": "0 * * * *" 
+      "schedule": "0 * * * *"
     }
   ]
 }

@@ -1,9 +1,4 @@
-import { Bot } from "grammy";
-import { NextResponse } from "next/server";
-import { getAllLeads } from "../../../src/lib/db.js";
-
-const token = process.env.TELEGRAM_BOT_TOKEN;
-const bot = new Bot(token);
+import bot from "../../../src/bot.js";
 
 export async function POST(req) {
     console.log("📨 Recebi um pedido de broadcast!");
