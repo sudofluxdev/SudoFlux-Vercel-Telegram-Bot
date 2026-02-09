@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "functions": {
+    "api/webhook.js": {
+      "runtime": "edge"
+    },
+    "api/scheduler.js": {
+      "runtime": "edge"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/webhook",
+      "dest": "api/webhook.js"
+    },
+    {
+      "src": "/api/scheduler",
+      "dest": "api/scheduler.js"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/scheduler",
+      "schedule": "0 * * * *" 
+    }
+  ]
+}
