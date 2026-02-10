@@ -37,6 +37,13 @@ To make it easier, run our PowerShell script:
 ./setup.ps1
 ```
 
+### 5. Ensuring Timer Precision (Optional but Recommended)
+For maximum reliability and 1-minute precision on broadcasts:
+1. Create a free account at [cron-job.org](https://console.cron-job.org/signup).
+2. Create a new "Job" pointing to your deployment URL: `https://your-app.vercel.app/api/cron`.
+3. Set it to run every **1 minute**.
+4. This ensures your bot never "sleeps" and always sends scheduled messages on time.
+
 ---
 
 ## 🌎 Mercado Internacional
