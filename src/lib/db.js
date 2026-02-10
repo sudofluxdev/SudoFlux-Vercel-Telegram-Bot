@@ -33,8 +33,14 @@ const cleanRESTFields = (fields) => {
     if (value.stringValue !== undefined) data[key] = value.stringValue;
     else if (value.booleanValue !== undefined) data[key] = value.booleanValue;
     else if (value.integerValue !== undefined) data[key] = parseInt(value.integerValue);
+    else if (value.doubleValue !== undefined) data[key] = parseFloat(value.doubleValue);
+    else if (value.timestampValue !== undefined) data[key] = value.timestampValue;
     else if (value.arrayValue !== undefined) {
-      data[key] = (value.arrayValue.values || []).map(v => cleanRESTFields(v.mapValue.fields));
+      data[key] = (value.arrayValue.values || []).map(v => {
+        if (v.mapValue) return cleanRESTFields(v.mapValue.fields);
+        if (v.stringValue !== undefined) return v.stringValue;
+        return v;
+      });
     }
   }
   return data;
@@ -122,7 +128,7 @@ export const getAllLeads = async () => {
 export const getAllGroups = async () => {
   if (db) {
     try {
-      const snapshot = await db.collection("groups").get();
+      const snapshot = await db.collection("groups").where("authorized", "==", true).get();
       return snapshot.docs.map((doc) => doc.id);
     } catch (e) { console.error("Admin SDK Error (groups):", e); }
   }
@@ -130,7 +136,13 @@ export const getAllGroups = async () => {
   try {
     const res = await fetch(`https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/groups?key=${API_KEY}&pageSize=1000`);
     const data = await res.json();
-    return data.documents ? data.documents.map(doc => doc.name.split("/").pop()) : [];
+    if (data.documents) {
+      return data.documents
+        .map(doc => ({ id: doc.name.split("/").pop(), ...cleanRESTFields(doc.fields) }))
+        .filter(g => g.authorized === true)
+        .map(g => g.id);
+    }
+    return [];
   } catch (e) { return []; }
 };
 

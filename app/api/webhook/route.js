@@ -140,6 +140,8 @@ export async function POST(req) {
                             (match.scope === 'private' && chatType === 'private') ||
                             (match.scope === 'group' && (chatType !== 'private'));
 
+                        console.log(`Command Match: [${text}] -> Rule: [${match.trigger}] | Scope: [${match.scope || 'global'}] | Chat: [${chatType}] | Valid: ${validScope}`);
+
                         if (validScope) {
                             const userId = body.message.from.id;
                             if (match.cooldown && match.cooldown > 0) {
