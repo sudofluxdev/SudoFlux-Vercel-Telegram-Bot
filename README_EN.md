@@ -76,19 +76,20 @@ This project is provided as a source code package. The buyer is expected to have
 
 ### 🔄 Update & Licensing Process
 - **Standard Plan ($250.00)**: Full access to the current source code and dashboard (V1.0). Does not include future feature updates.
-- **Ultimate Plan ($500.00)**: Full source + **Lifetime Updates**. This plan includes all future Roadmap integrations (Stripe, Crypto, etc.) at no extra cost.
-- **Early-Bird Pricing**: These are launch prices. As new APIs are integrated, the price for new buyers will increase significantly.
+- **Ultimate Plan ($500.00)**: Full source + **Lifetime Updates**. This plan includes all future Roadmap integrations (AI, Stripe, Crypto, etc.) at no extra cost.
+- **Price Lock-in**: Buyers who purchase now lock in the launch price. As new integrations (AI, Stripe, Crypto) are added, the price for new buyers will increase significantly to reflect the tool's added value.
 
 ### 💼 Commercial Use
 - Commercial use (selling services/bots to third parties/White Label) is allowed. With the Standard plan, you resell the current version. With the Ultimate plan, you can offer continuous updates to your clients.
 - The buyer is responsible for managing their own database (Firebase).
 
-### 🛰️ Future Roadmap (Full Plan)
-Buyers of the **Full Plan** will get access to these future integrations at no extra cost for the code (update fees still apply):
-- **Stripe** Integration (Payments).
-- Sales & Checkout APIs.
-- Real-time **Cryptocurrency** updates.
-- Integrations vary depending on the bot model chosen.
+### 🛰️ Future Roadmap (Ultimate Plan)
+Ultimate Plan holders will have access to the following future integrations at no extra cost for the source code:
+- **AI Auto-Chat**: Integration with LLMs (OpenAI/Anthropic) for intelligent automatic replies.
+- **Stripe** Integration (Dynamic Payments).
+- Sales & Automated Checkout APIs.
+- Real-time **Cryptocurrency** updates and monitoring.
+- Integrations vary depending on the chosen bot model.
 
 ### 📧 Contact & Support
 For dedicated corporate implementations or enterprise customization:

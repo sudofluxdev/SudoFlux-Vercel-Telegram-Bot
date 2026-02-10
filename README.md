@@ -74,20 +74,21 @@ Este projeto é fornecido como um pacote de código-fonte. O comprador deve ter 
 - **Vercel / Firebase**: Para hospedagem e banco de dados.
 - **Git / Node.js**: Para manipulação de arquivos e comandos básicos.
 
-### 🔄 Update & Licensing Process
-- **Standard Plan ($250.00)**: Full access to the current source code and dashboard (V1.0). Does not include future feature updates.
-- **Ultimate Plan ($500.00)**: Full source + **Lifetime Updates**. This plan includes all future Roadmap integrations (Stripe, Crypto, etc.) at no extra cost.
-- **Early-Bird Pricing**: These are launch prices. As new APIs are integrated, the price for new buyers will increase significantly.
+### 🔄 Processo de Atualização e Licenciamento
+- **Plano Standard ($250.00)**: Acesso total ao código-fonte e dashboard na versão atual (V1.0). Não inclui atualizações para novas funcionalidades futuras.
+- **Plano Ultimate ($500.00)**: Acesso total ao código + **Atualizações Vitalícias**. Este plano inclui todas as futuras integrações do Roadmap (IA, Stripe, Cripto, etc) sem custos adicionais.
+- **Garantia de Preço**: Quem adquirir as licenças agora garante o preço de lançamento. Conforme novas integrações (IA, Stripe, Cripto) forem adicionadas, o valor para novos compradores subirá significativamente para refletir o novo poder da ferramenta.
 
 ### 💼 Commercial Use
 - Commercial use (selling services/bots to third parties/White Label) is allowed. With the Standard plan, you resell the current version. With the Ultimate plan, you can offer continuous updates to your clients.
 - The buyer is responsible for managing their own database (Firebase).
 
-### 🛰️ Futuras Integrações (Roadmap para Plano Full)
-Quem possui o **Plano Full** terá acesso às seguintes integrações futuras sem custo adicional no código (apenas a taxa de atualização se aplica):
-- Integração com **Stripe** (Pagamentos).
-- APIs de Vendas e Checkout.
-- Atualização em tempo real de **Criptomoedas**.
+### 🛰️ Futuras Integrações (Roadmap para Plano Ultimate)
+Quem possui o **Plano Ultimate** terá acesso às seguintes integrações futuras sem custo adicional no código:
+- **IA Auto-Chat**: Integração com LLMs (OpenAI/Anthropic) para respostas inteligentes automáticas.
+- **Stripe**: Integração de Pagamentos dinâmicos.
+- APIs de Venda e Checkout automatizado.
+- Monitoramento e atualização em tempo real de **Criptomoedas**.
 - Novas integrações variam conforme o modelo de bot escolhido.
 
 ### 📧 Contato e Suporte
