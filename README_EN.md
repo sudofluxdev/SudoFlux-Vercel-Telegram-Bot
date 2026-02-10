@@ -99,5 +99,5 @@ For dedicated corporate implementations or enterprise customization:
 
 ---
 
-## 🌎 Mercado Internacional
-Para documentação em Português, acesse [README.md](README.md).
+## 🌎 International Market
+For documentation in Portuguese, please access [README.md](README.md).

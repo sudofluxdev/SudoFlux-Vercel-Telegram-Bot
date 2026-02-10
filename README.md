@@ -79,9 +79,9 @@ Este projeto é fornecido como um pacote de código-fonte. O comprador deve ter 
 - **Plano Ultimate ($500.00)**: Acesso total ao código + **Atualizações Vitalícias**. Este plano inclui todas as futuras integrações do Roadmap (IA, Stripe, Cripto, etc) sem custos adicionais.
 - **Garantia de Preço**: Quem adquirir as licenças agora garante o preço de lançamento. Conforme novas integrações (IA, Stripe, Cripto) forem adicionadas, o valor para novos compradores subirá significativamente para refletir o novo poder da ferramenta.
 
-### 💼 Commercial Use
-- Commercial use (selling services/bots to third parties/White Label) is allowed. With the Standard plan, you resell the current version. With the Ultimate plan, you can offer continuous updates to your clients.
-- The buyer is responsible for managing their own database (Firebase).
+### 💼 Uso Comercial
+- O uso comercial (venda de serviços/bots para terceiros/White Label) é permitido. Com o plano Standard, você revende a versão atual. Com o plano Ultimate, você pode oferecer atualizações contínuas para seus clientes.
+- O comprador é responsável por gerenciar seu próprio banco de dados (Firebase).
 
 ### 🛰️ Futuras Integrações (Roadmap para Plano Ultimate)
 Quem possui o **Plano Ultimate** terá acesso às seguintes integrações futuras sem custo adicional no código:
