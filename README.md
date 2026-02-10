@@ -74,14 +74,14 @@ Este projeto é fornecido como um pacote de código-fonte. O comprador deve ter 
 - **Vercel / Firebase**: Para hospedagem e banco de dados.
 - **Git / Node.js**: Para manipulação de arquivos e comandos básicos.
 
-### 🔄 Processo de Atualização
-- **Preço (Upfront)**: O custo inicial do **Plano Full** é de **$250.00**. Isso garante acesso total ao código-fonte e ao dashboard.
-- **Assinatura de Atualizações**: Para receber atualizações contínuas, novas integrações de API e correções, há uma taxa recorrente de **$25.00/mês**.
-- **Crescimento Inicial**: Os preços subirão conforme o ecossistema expandir, mas os primeiros compradores garantem estas condições preferenciais.
+### 🔄 Update & Licensing Process
+- **Standard Plan ($250.00)**: Full access to the current source code and dashboard (V1.0). Does not include future feature updates.
+- **Ultimate Plan ($500.00)**: Full source + **Lifetime Updates**. This plan includes all future Roadmap integrations (Stripe, Crypto, etc.) at no extra cost.
+- **Early-Bird Pricing**: These are launch prices. As new APIs are integrated, the price for new buyers will increase significantly.
 
-### 💼 Uso Comercial
-- É permitido o uso para venda de serviços/bots para terceiros (White Label), desde que a mensalidade de atualizações esteja ativa. 
-- Caso a assinatura seja cancelada, você mantém a última versão estável recebida, mas perde o acesso às integrações futuras do Roadmap.
+### 💼 Commercial Use
+- Commercial use (selling services/bots to third parties/White Label) is allowed. With the Standard plan, you resell the current version. With the Ultimate plan, you can offer continuous updates to your clients.
+- The buyer is responsible for managing their own database (Firebase).
 
 ### 🛰️ Futuras Integrações (Roadmap para Plano Full)
 Quem possui o **Plano Full** terá acesso às seguintes integrações futuras sem custo adicional no código (apenas a taxa de atualização se aplica):
