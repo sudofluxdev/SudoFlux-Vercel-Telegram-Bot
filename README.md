@@ -67,5 +67,35 @@ Para máxima confiabilidade e precisão de 1 minuto nos seus broadcasts:
 
 ---
 
+## 📜 Termos, Condições e Futuro (Roadmap)
+
+### 🚨 Importante: Conhecimento Técnico
+Este projeto é fornecido como um pacote de código-fonte. O comprador deve ter conhecimentos básicos em:
+- **Vercel / Firebase**: Para hospedagem e banco de dados.
+- **Git / Node.js**: Para manipulação de arquivos e comandos básicos.
+
+### 🔄 Processo de Atualização
+- **Manual**: As atualizações serão entregues via novos arquivos. O comprador é responsável por atualizar os arquivos no seu servidor e gerir seu próprio banco de dados (Firebase).
+- **Valores**: O preço inicial é promocional para custear o desenvolvimento constante. O valor subirá conforme novas funcionalidades forem integradas.
+
+### 💼 Uso Comercial
+- É permitido o uso para venda de serviços/bots para terceiros, desde que a mensalidade de atualizações esteja ativa. 
+- O projeto pode, em determinado momento, cessar novas atualizações e manter-se apenas em sua versão estável (Long Term Support).
+
+### 🛰️ Futuras Integrações (Roadmap para Plano Full)
+Quem possui o **Plano Full** terá acesso às seguintes integrações futuras sem custo adicional no código (apenas a taxa de atualização se aplica):
+- Integração com **Stripe** (Pagamentos).
+- APIs de Vendas e Checkout.
+- Atualização em tempo real de **Criptomoedas**.
+- Novas integrações variam conforme o modelo de bot escolhido.
+
+### 📧 Contato e Suporte
+Para uso exclusivo corporativo ou customizações enterprise:
+- **Email**: sudofluxdev@gmail.com
+- **Localização**: Brasil 🇧🇷
+- **Fuso Horário**: GMT-3 (Horário de Brasília)
+
+---
+
 ## 🌎 International Market
-For English documentation, please check [README_EN.md](README_EN.md).
+Para documentação em Inglês, acesse [README_EN.md](README_EN.md).

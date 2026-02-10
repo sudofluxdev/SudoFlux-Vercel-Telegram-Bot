@@ -67,5 +67,35 @@ For maximum reliability and 1-minute precision on broadcasts:
 
 ---
 
+## 📜 Terms, Conditions & Roadmap
+
+### 🚨 Important: Technical Knowledge
+This project is provided as a source code package. The buyer is expected to have basic skills in:
+- **Vercel / Firebase**: For hosting and database setup.
+- **Git / Node.js**: For file management and basic commands.
+
+### 🔄 Update Process
+- **Manual**: Updates will be delivered via new file packages. The buyer is responsible for updating files on their server and managing their own database (Firebase).
+- **Pricing**: The initial price is an early-bird offer to support continuous development. Pricing will increase as new features are integrated.
+
+### 💼 Commercial Use
+- Commercial use (selling services/bots to third parties) is allowed as long as the update subscription is active. 
+- The project may eventually stop receiving new updates and remain in a stable, long-term support (LTS) version.
+
+### 🛰️ Future Roadmap (Full Plan)
+Buyers of the **Full Plan** will get access to these future integrations at no extra cost for the code (update fees still apply):
+- **Stripe** Integration (Payments).
+- Sales & Checkout APIs.
+- Real-time **Cryptocurrency** updates.
+- Integrations vary depending on the bot model chosen.
+
+### 📧 Contact & Support
+For dedicated corporate implementations or enterprise customization:
+- **Email**: sudofluxdev@gmail.com
+- **Location**: Brazil 🇧🇷
+- **Timezone**: GMT-3
+
+---
+
 ## 🌎 Mercado Internacional
 Para documentação em Português, acesse [README.md](README.md).
