@@ -1,6 +1,6 @@
-# 🛰️ BotSudo V1.0 - Hyper-Core Telegram System
+# 🛰️ BotFlux V1.0 - Hyper-Core Telegram System
 
-O BotSudo é uma estrutura completa para automação de canais e grupos de Telegram, acompanhada de um Dashboard administrativo premium.
+O BotFlux é uma estrutura completa para automação de canais e grupos de Telegram, acompanhada de um Dashboard administrativo premium.
 
 ## 🚀 Funcionalidades Principais
 - **Dashboard Minimalista**: Gestão total via interface web ultra-rápida.
