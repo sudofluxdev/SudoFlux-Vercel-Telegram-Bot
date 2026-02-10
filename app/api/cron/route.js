@@ -170,8 +170,24 @@ export async function GET() {
             } else {
                 // RESCHEDULE
                 let nextDate = new Date(task.scheduled_at.toDate ? task.scheduled_at.toDate() : task.scheduled_at);
+
                 if (task.frequency === 'daily') nextDate.setDate(nextDate.getDate() + 1);
-                if (task.frequency === 'weekly') nextDate.setDate(nextDate.getDate() + 7);
+                else if (task.frequency === 'weekly') nextDate.setDate(nextDate.getDate() + 7);
+                else if (task.frequency === 'custom' && task.custom_interval) {
+                    nextDate.setMinutes(nextDate.getMinutes() + Number(task.custom_interval));
+                }
+
+                // If nextDate is still in the past (e.g. system was down), 
+                // move it to the future based on the interval
+                while (nextDate <= now) {
+                    if (task.frequency === 'daily') nextDate.setDate(nextDate.getDate() + 1);
+                    else if (task.frequency === 'weekly') nextDate.setDate(nextDate.getDate() + 7);
+                    else if (task.frequency === 'custom' && task.custom_interval) {
+                        nextDate.setMinutes(nextDate.getMinutes() + Number(task.custom_interval));
+                    } else {
+                        break; // Prevent infinite loop for 'once'
+                    }
+                }
 
                 await db.collection("scheduled_tasks").doc(taskId).update({
                     scheduled_at: nextDate,

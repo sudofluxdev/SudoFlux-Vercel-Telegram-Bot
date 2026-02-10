@@ -27,10 +27,16 @@ export default function BroadcastPage() {
     const [isScheduled, setIsScheduled] = useState(false);
     const [scheduleDate, setScheduleDate] = useState("");
     const [scheduleTime, setScheduleTime] = useState("");
-    const [repeatFreq, setRepeatFreq] = useState("once"); // once, daily, weekly
+    const [repeatFreq, setRepeatFreq] = useState("once"); // once, daily, weekly, custom
+    const [customInterval, setCustomInterval] = useState(30); // minutes
 
     // --- STATE: LOGS ---
     const [scheduledTasks, setScheduledTasks] = useState([]);
+
+    // --- WAKE UP ---
+    const wakeUpBot = async () => {
+        try { await fetch("/api/cron"); } catch (e) { }
+    };
 
     // --- INIT ---
     useEffect(() => {
@@ -121,6 +127,7 @@ export default function BroadcastPage() {
                 scope: targetScope,
                 buttons, // Added buttons to payload
                 frequency: repeatFreq,
+                custom_interval: repeatFreq === 'custom' ? Number(customInterval) : null,
                 scheduled_at: isScheduled ? new Date(`${scheduleDate}T${scheduleTime}`) : null,
                 status: "pending",
                 created_at: new Date()
@@ -138,6 +145,7 @@ export default function BroadcastPage() {
                     await addDoc(collection(db, "scheduled_tasks"), payload);
                     showToast("Signal Scheduled.", "success");
                 }
+                wakeUpBot();
                 setStatus("success"); setResult("Scheduled");
                 cancelEdit();
 
@@ -333,9 +341,34 @@ export default function BroadcastPage() {
                                                 <option value="once">One-Time</option>
                                                 <option value="daily">Daily</option>
                                                 <option value="weekly">Weekly</option>
+                                                <option value="custom">Every X Minutes</option>
                                             </select>
                                         </div>
                                     </div>
+
+                                    {repeatFreq === 'custom' && (
+                                        <div className="mt-4 animate-in slide-in-from-top-2">
+                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 block">Repeat Interval (Minutes)</label>
+                                            <div className="flex gap-3">
+                                                {[5, 15, 30, 60, 120].map(m => (
+                                                    <button
+                                                        key={m}
+                                                        onClick={() => setCustomInterval(m)}
+                                                        className={`flex-1 py-2 rounded-xl text-[10px] font-bold border transition-all ${customInterval === m ? 'bg-cyan-500/10 border-cyan-500/50 text-cyan-400' : 'bg-black border-white/5 text-gray-500'}`}
+                                                    >
+                                                        {m < 60 ? `${m}m` : `${m / 60}h`}
+                                                    </button>
+                                                ))}
+                                                <input
+                                                    type="number"
+                                                    value={customInterval}
+                                                    onChange={e => setCustomInterval(e.target.value)}
+                                                    className="w-20 bg-black border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:border-cyan-500 outline-none"
+                                                    placeholder="Min"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
                                     <div className="mt-4 flex items-start gap-3 bg-indigo-500/5 border border-indigo-500/10 p-3 rounded-xl">
                                         <Info className="w-4 h-4 text-indigo-400 mt-0.5 shrink-0" />
                                         <div className="text-[10px] text-gray-400 leading-relaxed">
@@ -378,9 +411,17 @@ export default function BroadcastPage() {
 
                 {/* SIGNAL LOG (RIGHT) */}
                 <div className="lg:col-span-1 border-l border-white/5 lg:pl-8 space-y-6">
-                    <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                        <Clock className="w-4 h-4" /> Signal Log
-                    </h3>
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                            <Clock className="w-4 h-4" /> Signal Log
+                        </h3>
+                        <button
+                            onClick={wakeUpBot}
+                            className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-gray-500 hover:text-cyan-400 transition-all border border-white/5 group"
+                        >
+                            <Repeat className="w-4 h-4 group-active:rotate-180 transition-transform" />
+                        </button>
+                    </div>
 
                     <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                         {scheduledTasks.length === 0 && (
