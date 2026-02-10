@@ -28,5 +28,6 @@ build/
 
 # SudoSquad
 .sudosquad/
+security.js
 
 .vercel
