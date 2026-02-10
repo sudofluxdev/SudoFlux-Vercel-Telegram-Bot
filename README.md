@@ -75,12 +75,13 @@ Este projeto é fornecido como um pacote de código-fonte. O comprador deve ter 
 - **Git / Node.js**: Para manipulação de arquivos e comandos básicos.
 
 ### 🔄 Processo de Atualização
-- **Manual**: As atualizações serão entregues via novos arquivos. O comprador é responsável por atualizar os arquivos no seu servidor e gerir seu próprio banco de dados (Firebase).
-- **Valores**: O preço inicial é promocional para custear o desenvolvimento constante. O valor subirá conforme novas funcionalidades forem integradas.
+- **Preço (Upfront)**: O custo inicial do **Plano Full** é de **$250.00**. Isso garante acesso total ao código-fonte e ao dashboard.
+- **Assinatura de Atualizações**: Para receber atualizações contínuas, novas integrações de API e correções, há uma taxa recorrente de **$25.00/mês**.
+- **Crescimento Inicial**: Os preços subirão conforme o ecossistema expandir, mas os primeiros compradores garantem estas condições preferenciais.
 
 ### 💼 Uso Comercial
-- É permitido o uso para venda de serviços/bots para terceiros, desde que a mensalidade de atualizações esteja ativa. 
-- O projeto pode, em determinado momento, cessar novas atualizações e manter-se apenas em sua versão estável (Long Term Support).
+- É permitido o uso para venda de serviços/bots para terceiros (White Label), desde que a mensalidade de atualizações esteja ativa. 
+- Caso a assinatura seja cancelada, você mantém a última versão estável recebida, mas perde o acesso às integrações futuras do Roadmap.
 
 ### 🛰️ Futuras Integrações (Roadmap para Plano Full)
 Quem possui o **Plano Full** terá acesso às seguintes integrações futuras sem custo adicional no código (apenas a taxa de atualização se aplica):

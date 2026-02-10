@@ -75,12 +75,13 @@ This project is provided as a source code package. The buyer is expected to have
 - **Git / Node.js**: For file management and basic commands.
 
 ### 🔄 Update Process
-- **Manual**: Updates will be delivered via new file packages. The buyer is responsible for updating files on their server and managing their own database (Firebase).
-- **Pricing**: The initial price is an early-bird offer to support continuous development. Pricing will increase as new features are integrated.
+- **Pricing (Upfront)**: The **Full Plan** upfront cost is **$250.00**. This grants full access to the source code and dashboard.
+- **Update Subscription**: To receive ongoing service updates, new API integrations, and bug fixes, there is a recurring fee of **$25.00/month**.
+- **Early-Bird Growth**: Pricing will increase as the ecosystem expands, but early adopters lock in these preferential terms.
 
 ### 💼 Commercial Use
-- Commercial use (selling services/bots to third parties) is allowed as long as the update subscription is active. 
-- The project may eventually stop receiving new updates and remain in a stable, long-term support (LTS) version.
+- Commercial use (selling services/bots to third parties/White Label) is allowed as long as the update subscription is active. 
+- If the subscription is cancelled, you retain the last stable version received but lose access to future Roadmap integrations.
 
 ### 🛰️ Future Roadmap (Full Plan)
 Buyers of the **Full Plan** will get access to these future integrations at no extra cost for the code (update fees still apply):
