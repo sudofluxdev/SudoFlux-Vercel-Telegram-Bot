@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Função para verificar se é você (Admin logado)
+    function isSuperAdmin() {
+      return request.auth != null && request.auth.token.email == 'sudofluxdev@gmail.com';
+    }
+
+    // Permitir leitura pública para que o Robô (via REST) consiga funcionar sem Service Account
+    // Mas apenas leitura! Escrita é proibida.
+    match /settings/bot_config {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+    
+    match /automation/{docId} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    match /groups/{docId} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    // Leads: O Robô cria novos, você gerencia
+    match /leads/{leadId} {
+      allow create: if true; 
+      allow read, update, delete: if isSuperAdmin();
+    }
+
+    // [ZERO_TRUST] Todo o resto é bloqueado
+    match /{document=**} {
+      allow read, write: if isSuperAdmin();
+    }
+  }
+}

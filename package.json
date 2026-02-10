@@ -10,16 +10,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "chalk": "^4.1.2",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "firebase": "^12.9.0",
     "firebase-admin": "^12.0.0",
     "framer-motion": "^12.34.0",
+    "fs-extra": "^11.3.3",
     "grammy": "^1.21.1",
     "lucide-react": "^0.563.0",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
     "tailwind-merge": "^3.4.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1"
   }
 }

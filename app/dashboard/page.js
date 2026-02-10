@@ -1,17 +1,112 @@
 "use client";
-import { Users, UserCheck, MessageSquare, TrendingUp } from "lucide-react";
+import { Users, UserCheck, MessageSquare, TrendingUp, Activity, ArrowUpRight, Zap, Globe, Database, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { collection, onSnapshot, doc } from "firebase/firestore";
+import { db } from "@/lib/firebaseClient";
+import { useToast } from "@/context/ToastContext";
 
 export default function Dashboard() {
-    const stats = [
-        { name: "Total Leads", value: "2,543", icon: Users, change: "+12%", color: "blue" },
-        { name: "Active Users", value: "1,892", icon: UserCheck, change: "+5%", color: "green" },
-        { name: "Total Messages", value: "48.2k", icon: MessageSquare, change: "+18%", color: "purple" },
-        { name: "Conv. Rate", value: "24.5%", icon: TrendingUp, change: "+3.2%", color: "orange" },
-    ];
+    const { showToast } = useToast() || { showToast: () => { } };
+    const [leads, setLeads] = useState([]);
+    const [realStats, setRealStats] = useState({ total_messages: 0 });
+    const [stats, setStats] = useState([
+        { name: "Total Leads", value: "0", icon: Users, change: "+0%", color: "cyan" },
+        { name: "Active Users", value: "0", icon: UserCheck, change: "+0%", color: "blue" },
+        { name: "Total Messages", value: "0", icon: MessageSquare, change: "+0%", color: "violet" },
+        { name: "Conv. Rate", value: "0%", icon: TrendingUp, change: "+0%", color: "emerald" },
+    ]);
+    const [recentActivity, setRecentActivity] = useState([]);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const refreshEngine = async () => {
+        setIsRefreshing(true);
+        try {
+            await fetch("/api/cron");
+            showToast("Bot Engine successfully rebooted!", "success");
+        } catch (e) {
+            showToast("Neural sync failed.", "error");
+        }
+        setTimeout(() => setIsRefreshing(false), 1000);
+    };
+
+    useEffect(() => {
+        if (!db) return;
+
+        // Listen to Leads
+        const unsubLeads = onSnapshot(collection(db, "leads"), (snapshot) => {
+            const leadsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setLeads(leadsData);
+
+            const sortedLeads = leadsData.sort((a, b) => {
+                const dateA = a.data_entrada?.toDate ? a.data_entrada.toDate() : new Date(a.data_entrada || 0);
+                const dateB = b.data_entrada?.toDate ? b.data_entrada.toDate() : new Date(b.data_entrada || 0);
+                return dateB - dateA;
+            });
+
+            const activity = sortedLeads.slice(0, 5).map(lead => ({
+                id: lead.id,
+                name: lead.first_name || lead.username || "Unknown User",
+                action: "New Lead Captured",
+                time: lead.data_entrada?.toDate ? lead.data_entrada.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Just Now"
+            }));
+            setRecentActivity(activity);
+        });
+
+        // Listen to Counter Stats
+        const unsubStats = onSnapshot(doc(db, "settings", "stats"), (docSnap) => {
+            if (docSnap.exists()) {
+                setRealStats(docSnap.data());
+            }
+        });
+
+        return () => {
+            unsubLeads();
+            unsubStats();
+        };
+    }, []);
+
+    // Update Stats UI when data changes
+    useEffect(() => {
+        const totalLeads = leads.length;
+        const activeUsers = leads.filter(l => l.type === 'private').length;
+        const messages = realStats.total_messages || 0;
+        const convRate = totalLeads > 0 ? "100%" : "0%";
+
+        setStats([
+            { name: "Total Leads", value: totalLeads.toString(), icon: Users, change: "LIVE", color: "cyan" },
+            { name: "Active Users", value: activeUsers.toString(), icon: UserCheck, change: "SYNC", color: "blue" },
+            { name: "Total Messages", value: messages >= 1000 ? (messages / 1000).toFixed(1) + "k" : messages.toString(), icon: MessageSquare, change: "AUTO", color: "violet" },
+            { name: "Conv. Rate", value: convRate, icon: TrendingUp, change: "MAX", color: "emerald" },
+        ]);
+    }, [leads, realStats]);
 
     return (
         <div className="space-y-10">
+            {/* Header / Welcome */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div>
+                    <h1 className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-gray-500 tracking-tighter">
+                        Command Overview
+                    </h1>
+                    <p className="text-gray-400 mt-2 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.3em]">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.4)] animate-pulse" />
+                        Live Neural Link : [SECURE]
+                    </p>
+                </div>
+                <div className="flex gap-3">
+                    <button
+                        onClick={refreshEngine}
+                        disabled={isRefreshing}
+                        className="px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-2xl text-xs font-bold shadow-2xl shadow-cyan-500/30 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                    >
+                        <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                        Refresh Engine
+                    </button>
+                </div>
+            </div>
+
+            {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat, index) => (
                     <motion.div
@@ -19,47 +114,102 @@ export default function Dashboard() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="bg-[#0a0a0a] border border-[#1a1a1a] p-6 rounded-3xl hover:border-[#2a2a2a] transition-colors"
+                        className="group relative bg-[#070707] border border-white/[0.03] p-8 rounded-[2rem] overflow-hidden hover:border-white/10 transition-all shadow-xl"
                     >
-                        <div className="flex items-center justify-between mb-4">
-                            <div className={`p-3 rounded-2xl bg-${stat.color}-600/10`}>
-                                <stat.icon className={`w-6 h-6 text-${stat.color}-500`} />
+                        <div className={`absolute inset-0 bg-gradient-to-br from-${stat.color}-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
+
+                        <div className="relative z-10">
+                            <div className="flex items-center justify-between mb-6">
+                                <div className={`p-3 rounded-2xl bg-${stat.color}-500/10 border border-${stat.color}-500/20 text-${stat.color}-400`}>
+                                    <stat.icon className="w-6 h-6" />
+                                </div>
+                                <div className="flex items-center gap-1.5 text-emerald-400 text-[10px] font-bold bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                                    <Zap className="w-3 h-3" />
+                                    {stat.change}
+                                </div>
                             </div>
-                            <span className="text-green-500 text-sm font-medium">{stat.change}</span>
+                            <h3 className="text-gray-500 text-xs font-bold tracking-widest uppercase mb-1">{stat.name}</h3>
+                            <p className="text-3xl font-black text-white tracking-tighter">{stat.value}</p>
                         </div>
-                        <h3 className="text-gray-400 text-sm mb-1">{stat.name}</h3>
-                        <p className="text-2xl font-bold">{stat.value}</p>
                     </motion.div>
                 ))}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="bg-[#0a0a0a] border border-[#1a1a1a] p-8 rounded-3xl min-h-[400px]">
-                    <h3 className="text-xl font-bold mb-6">Recent Activity</h3>
-                    <div className="space-y-6">
-                        {[1, 2, 3, 4].map((i) => (
-                            <div key={i} className="flex items-center gap-4 pb-6 border-b border-[#1a1a1a] last:border-0 last:pb-0">
-                                <div className="w-10 h-10 rounded-full bg-gray-800" />
-                                <div className="flex-1">
-                                    <p className="text-sm font-medium">Novo lead capturado: @user{i}</p>
-                                    <p className="text-xs text-gray-500">Há {i * 15} minutos</p>
-                                </div>
-                                <div className="px-3 py-1 bg-blue-600/10 text-blue-500 text-xs rounded-full font-medium">
-                                    Novo
-                                </div>
+            {/* Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <div className="lg:col-span-2 bg-[#070707] border border-white/[0.03] rounded-[3rem] p-10 relative overflow-hidden shadow-2xl">
+                    <div className="flex items-center justify-between mb-10 relative z-10">
+                        <div className="flex items-center gap-4">
+                            <div className="p-3 bg-blue-500/10 rounded-2xl border border-blue-500/20">
+                                <Activity className="w-6 h-6 text-blue-400" />
                             </div>
-                        ))}
+                            <div>
+                                <h3 className="text-xl font-bold text-white tracking-tight">Live Traffic Flux</h3>
+                                <p className="text-[10px] text-gray-600 font-mono">Real-time engagement stream</p>
+                            </div>
+                        </div>
                     </div>
+
+                    <div className="space-y-8 relative z-10">
+                        {recentActivity.length === 0 ? (
+                            <div className="py-20 text-center text-gray-600 border-2 border-dashed border-white/5 rounded-[2rem]">
+                                No active flux detected. Link the bot to start tracking.
+                            </div>
+                        ) : (
+                            recentActivity.map((activity, i) => (
+                                <div key={i} className="group flex items-center gap-5 pb-8 border-b border-white/[0.03] last:border-0 last:pb-0">
+                                    <div className="relative">
+                                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-gray-800 to-black border border-white/10 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                            <span className="text-sm font-black text-gray-500">{activity.name.charAt(0)}</span>
+                                        </div>
+                                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#070707] rounded-lg flex items-center justify-center border border-white/[0.03]">
+                                            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                                        </div>
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center justify-between mb-1">
+                                            <p className="text-sm font-bold text-white group-hover:text-cyan-400 transition-colors truncate">
+                                                {activity.action} <span className="text-gray-600 font-medium">@{activity.name}</span>
+                                            </p>
+                                            <span className="text-[10px] text-gray-600 font-mono font-bold">{activity.time}</span>
+                                        </div>
+                                        <p className="text-xs text-gray-600 tracking-wide">
+                                            Neural command processed [200 OK]
+                                        </p>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+
+                    <div className="absolute -top-10 -right-10 w-80 h-80 bg-blue-600/[0.03] rounded-full blur-[100px] pointer-events-none" />
                 </div>
 
-                <div className="bg-[#0a0a0a] border border-[#1a1a1a] p-8 rounded-3xl flex flex-col items-center justify-center text-center">
-                    <div className="w-20 h-20 bg-blue-600/10 rounded-full flex items-center justify-center mb-6">
-                        <TrendingUp className="w-10 h-10 text-blue-500" />
+                <div className="bg-[#070707] border border-white/[0.03] rounded-[3rem] p-10 relative overflow-hidden flex flex-col items-center justify-center text-center shadow-2xl">
+                    <div className="relative w-48 h-48 mb-10 group">
+                        <div className="absolute inset-0 bg-cyan-500/20 rounded-full animate-ping opacity-20" />
+                        <div className="absolute inset-0 bg-cyan-500/10 rounded-full blur-3xl opacity-50 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative w-full h-full rounded-full border-2 border-dashed border-cyan-500/20 flex items-center justify-center animate-[spin_20s_linear_infinite]">
+                            <Globe className="w-16 h-16 text-cyan-500/30" />
+                        </div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-20 h-20 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-3xl flex items-center justify-center shadow-2xl rotate-12 group-hover:rotate-0 transition-transform">
+                                <Zap className="w-10 h-10 text-white" />
+                            </div>
+                        </div>
                     </div>
-                    <h3 className="text-xl font-bold mb-2">Power Analysis</h3>
-                    <p className="text-gray-400 max-w-sm">
-                        Aqui serão exibidos gráficos de crescimento e engajamento do seu bot em tempo real.
-                    </p>
+
+                    <h4 className="text-4xl font-black text-white tracking-tighter mb-2">99.9%</h4>
+                    <p className="text-[10px] text-cyan-500 font-mono uppercase tracking-[0.4em] mb-10">Uptime Stability</p>
+
+                    <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden border border-white/5 p-[1px]">
+                        <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: "99.9%" }}
+                            transition={{ duration: 2, ease: "easeOut" }}
+                            className="bg-gradient-to-r from-cyan-500 to-blue-600 h-full rounded-full shadow-[0_0_15px_rgba(6,182,212,0.4)]"
+                        />
+                    </div>
                 </div>
             </div>
         </div>

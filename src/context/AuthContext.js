@@ -13,13 +13,24 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        if (!auth) {
+            console.error("Firebase auth instance is null. Check environment variables.");
+            setLoading(false);
+            return;
+        }
+
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                setUser(user);
-                // Verificar se é Admin no Firestore
-                const adminRef = doc(db, "admins", user.email);
-                const adminSnap = await getDoc(adminRef);
-                setIsAdmin(adminSnap.exists());
+                if (user.email === "sudofluxdev@gmail.com") {
+                    setUser(user);
+                    setIsAdmin(true); // Super Admin Hardcoded
+                } else {
+                    console.warn(`Unauthorized access attempt: ${user.email}`);
+                    await signOut(auth);
+                    setUser(null);
+                    setIsAdmin(false);
+                    alert("ACCESS DENIED: Restricted to sudofluxdev@gmail.com");
+                }
             } else {
                 setUser(null);
                 setIsAdmin(false);
@@ -31,6 +42,10 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const loginWithGoogle = async () => {
+        if (!auth) {
+            console.error("Firebase Auth not initialized. Cannot login.");
+            return;
+        }
         try {
             await signInWithPopup(auth, googleProvider);
         } catch (error) {
@@ -38,7 +53,10 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = () => signOut(auth);
+    const logout = () => {
+        if (!auth) return;
+        signOut(auth);
+    };
 
     return (
         <AuthContext.Provider value={{ user, isAdmin, loginWithGoogle, logout, loading }}>

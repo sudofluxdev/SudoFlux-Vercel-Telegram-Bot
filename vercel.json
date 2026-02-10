@@ -1,19 +1,8 @@
 {
-  "version": 2,
-  "routes": [
-    {
-      "src": "/api/webhook",
-      "dest": "api/webhook.js"
-    },
-    {
-      "src": "/api/scheduler",
-      "dest": "api/scheduler.js"
-    }
-  ],
-  "crons": [
-    {
-      "path": "/api/scheduler",
-      "schedule": "0 * * * *"
-    }
-  ]
+    "crons": [
+        {
+            "path": "/api/cron",
+            "schedule": "*/10 * * * *"
+        }
+    ]
 }

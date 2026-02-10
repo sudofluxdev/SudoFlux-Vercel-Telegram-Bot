@@ -1,11 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebaseClient";
-import { Users, Search, Filter, MoreVertical, Calendar } from "lucide-react";
+import { Users, Search, Filter, Trash2, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
+import { useToast } from "@/context/ToastContext";
 
 export default function LeadsPage() {
+    const { showToast } = useToast();
     const [leads, setLeads] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
@@ -25,6 +27,16 @@ export default function LeadsPage() {
         return () => unsubscribe();
     }, []);
 
+    const deleteLead = async (id) => {
+        if (!confirm("Are you sure you want to eliminate this lead?")) return;
+        try {
+            await deleteDoc(doc(db, "leads", id));
+            showToast("Lead removed from the matrix.", "info");
+        } catch (err) {
+            showToast("Failed to remove lead.", "error");
+        }
+    };
+
     const filteredLeads = leads.filter(lead =>
         lead.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         lead.id?.includes(searchTerm) ||
@@ -35,75 +47,77 @@ export default function LeadsPage() {
         <div className="space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold mb-2">Leads Management</h1>
-                    <p className="text-gray-400">Visualize e organize todos os usuários capturados pelo bot.</p>
+                    <h1 className="text-3xl font-bold mb-2">Lead Archives</h1>
+                    <p className="text-gray-400">Manage and analyze all biological users captured by the system.</p>
                 </div>
 
-                <div className="bg-blue-600 text-white px-6 py-3 rounded-2xl flex items-center gap-2 font-bold shadow-lg shadow-blue-500/20">
+                <div className="bg-blue-600 text-white px-6 py-3 rounded-2xl flex items-center gap-2 font-bold shadow-lg shadow-blue-500/20 tracking-tight">
                     <Users className="w-5 h-5" />
-                    {leads.length} Total Leads
+                    {leads.length} Total Registered
                 </div>
             </div>
 
             {/* Controls */}
             <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1 relative">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-600" />
                     <input
                         type="text"
-                        placeholder="Buscar por nome, @username ou ID..."
+                        placeholder="Search by name, @username or system ID..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-[#0a0a0a] border border-[#1a1a1a] rounded-2xl py-4 pl-12 pr-6 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                        className="w-full bg-[#0a0a0a] border border-white/5 rounded-2xl py-4 pl-12 pr-6 text-white focus:outline-none focus:border-blue-500 transition-all shadow-inner"
                     />
                 </div>
-                <button className="bg-[#0a0a0a] border border-[#1a1a1a] px-6 py-4 rounded-2xl flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
-                    <Filter className="w-5 h-5" />
-                    Filtros
+                <button className="bg-[#0a0a0a] border border-white/5 px-6 py-4 rounded-2xl flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                    <Filter className="w-4 h-4" />
+                    Advanced Filters
                 </button>
             </div>
 
             {/* Table */}
-            <div className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-3xl overflow-hidden">
+            <div className="bg-[#0a0a0a] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="border-b border-[#1a1a1a] bg-[#0c0c0c]">
-                                <th className="p-6 text-sm font-bold text-gray-400 uppercase tracking-widest">Usuário</th>
-                                <th className="p-6 text-sm font-bold text-gray-400 uppercase tracking-widest">Username</th>
-                                <th className="p-6 text-sm font-bold text-gray-400 uppercase tracking-widest">ID Telegram</th>
-                                <th className="p-6 text-sm font-bold text-gray-400 uppercase tracking-widest">Data de Entrada</th>
-                                <th className="p-6 text-sm font-bold text-gray-400 uppercase tracking-widest text-right">Ações</th>
+                            <tr className="border-b border-white/5 bg-white/[0.02]">
+                                <th className="p-8 text-xs font-bold text-gray-500 uppercase tracking-widest">Target</th>
+                                <th className="p-8 text-xs font-bold text-gray-500 uppercase tracking-widest">Username</th>
+                                <th className="p-8 text-xs font-bold text-gray-500 uppercase tracking-widest">System ID</th>
+                                <th className="p-8 text-xs font-bold text-gray-500 uppercase tracking-widest">Detection Date</th>
+                                <th className="p-8 text-xs font-bold text-gray-500 uppercase tracking-widest text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-[#1a1a1a]">
+                        <tbody className="divide-y divide-white/5">
                             {loading ? (
-                                <tr><td colSpan="5" className="p-20 text-center text-gray-500 animate-pulse">Carregando leads...</td></tr>
+                                <tr><td colSpan="5" className="p-20 text-center text-gray-600 font-mono tracking-widest animate-pulse">SYNCHRONIZING RECORDS...</td></tr>
                             ) : filteredLeads.length === 0 ? (
-                                <tr><td colSpan="5" className="p-20 text-center text-gray-500">Nenhum lead encontrado.</td></tr>
+                                <tr><td colSpan="5" className="p-20 text-center text-gray-500">No leads found in the database.</td></tr>
                             ) : filteredLeads.map((lead) => (
-                                <tr key={lead.id} className="hover:bg-[#0c0c0c] transition-colors group">
-                                    <td className="p-6">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center font-bold text-white text-xs">
+                                <tr key={lead.id} className="hover:bg-white/[0.01] transition-colors group">
+                                    <td className="p-8">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center font-black text-white text-sm shadow-lg group-hover:scale-110 transition-transform">
                                                 {lead.first_name?.charAt(0)}
                                             </div>
-                                            <span className="font-medium">{lead.first_name}</span>
+                                            <span className="font-bold tracking-tight text-white">{lead.first_name}</span>
                                         </div>
                                     </td>
-                                    <td className="p-6">
-                                        <span className="text-blue-500">@{lead.username || "n/a"}</span>
+                                    <td className="p-8">
+                                        <span className="text-blue-400 font-medium">@{lead.username || "restricted_access"}</span>
                                     </td>
-                                    <td className="p-6 text-gray-400 font-mono text-sm">{lead.id}</td>
-                                    <td className="p-6 text-gray-400">
-                                        <div className="flex items-center gap-2">
-                                            <Calendar className="w-4 h-4" />
-                                            {lead.data_entrada?.toDate ? lead.data_entrada.toDate().toLocaleDateString() : "n/a"}
+                                    <td className="p-8 text-gray-500 font-mono text-xs">{lead.id}</td>
+                                    <td className="p-8 text-gray-400">
+                                        <div className="flex items-center gap-2 text-sm font-medium">
+                                            {lead.data_entrada?.toDate ? lead.data_entrada.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : "pending"}
                                         </div>
                                     </td>
-                                    <td className="p-6 text-right">
-                                        <button className="p-2 hover:bg-[#1a1a1a] rounded-lg transition-colors">
-                                            <MoreVertical className="w-5 h-5 text-gray-500" />
+                                    <td className="p-8 text-right">
+                                        <button
+                                            onClick={() => deleteLead(lead.id)}
+                                            className="p-3 hover:bg-rose-500/10 rounded-2xl transition-all group/del border border-transparent hover:border-rose-500/20"
+                                        >
+                                            <Trash2 className="w-5 h-5 text-gray-600 group-hover/del:text-rose-500" />
                                         </button>
                                     </td>
                                 </tr>
