@@ -19,9 +19,16 @@ BotSudo is a complete solution for Telegram channel and group automation, featur
 
 ### 2. Firebase Setup
 1. Create a Firebase project.
-2. Enable **Firestore Database**.
-3. In "Project Settings" > "Service Accounts", generate a new private key (JSON).
-4. Copy the content of this JSON.
+2. Enable **Firestore Database** and choose the server location.
+3. Enable **Firebase Authentication**:
+   - Go to "Authentication" > "Sign-in method".
+   - Enable the **Google** provider.
+   - Set the project support email.
+4. **Firestore Rules**:
+   - Go to "Firestore Database" > "Rules".
+   - Use basic rules (or the ones in the `firestore.rules` file) to allow authenticated users to manage the dashboard.
+5. In "Project Settings" > "Service Accounts", generate a new private key (JSON).
+6. Copy the content of this JSON.
 
 ### 3. Variable Configuration
 Rename the `.env.example` file to `.env` and fill it in:
@@ -37,7 +44,21 @@ To make it easier, run our PowerShell script:
 ./setup.ps1
 ```
 
-### 5. Ensuring Timer Precision (Optional but Recommended)
+### 5. Hosting on Vercel (100% Online)
+1. Create an account at [Vercel](https://vercel.com).
+2. Connect your GitHub repository or use the [Vercel CLI](https://vercel.com/download).
+3. In the Vercel dashboard, go to **Project Settings > Environment Variables** and add:
+   - `TELEGRAM_BOT_TOKEN`: Your bot token.
+   - `FIREBASE_SERVICE_ACCOUNT_KEY`: The full JSON from your Firebase Service Account.
+   - `X-Telegram-Bot-Api-Secret-Token`: A strong password (must match your webhook secret).
+4. Perform the **Deploy**.
+
+### 6. Configuring the Webhook (Mandatory)
+After deployment, you must tell Telegram where to send messages:
+1. Access your dashboard (e.g., `https://your-app.vercel.app/dashboard/settings`).
+2. Click **"Update Webhook"** or use the configuration button to save the token and URL automatically.
+
+### 7. Ensuring Timer Precision (Optional but Recommended)
 For maximum reliability and 1-minute precision on broadcasts:
 1. Create a free account at [cron-job.org](https://console.cron-job.org/signup).
 2. Create a new "Job" pointing to your deployment URL: `https://your-app.vercel.app/api/cron`.

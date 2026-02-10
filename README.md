@@ -19,9 +19,16 @@ O BotSudo é uma estrutura completa para automação de canais e grupos de Teleg
 
 ### 2. Configuração do Firebase
 1. Crie um projeto no Firebase.
-2. Ative o **Firestore Database**.
-3. Em "Project Settings" > "Service Accounts", gere uma nova chave privada (JSON).
-4. Copie o conteúdo desse JSON.
+2. Ative o **Firestore Database** e escolha o local do servidor.
+3. Ative o **Firebase Authentication**:
+   - Vá em "Authentication" > "Sign-in method".
+   - Ative o provedor **Google**. 
+   - Configure o e-mail de suporte do projeto.
+4. **Regras do Firestore**:
+   - Vá em "Firestore Database" > "Rules".
+   - Use as regras básicas (ou as que estão no arquivo `firestore.rules` do projeto) para permitir que usuários autenticados gerenciem o dashboard.
+5. Em "Project Settings" > "Service Accounts", gere uma nova chave privada (JSON).
+6. Copie o conteúdo desse JSON.
 
 ### 3. Configuração de Variáveis
 Renomeie o arquivo `.env.example` para `.env` e preencha:
@@ -37,7 +44,21 @@ Para facilitar, execute nosso script no PowerShell:
 ./setup.ps1
 ```
 
-### 5. Garantindo Precisão no Timer (Opcional mas Recomendado)
+### 5. Hospedagem na Vercel (100% Online)
+1. Crie uma conta na [Vercel](https://vercel.com).
+2. Conecte seu repositório do GitHub ou use a [Vercel CLI](https://vercel.com/download).
+3. No painel da Vercel, vá em **Project Settings > Environment Variables** e adicione:
+   - `TELEGRAM_BOT_TOKEN`: O token do seu bot.
+   - `FIREBASE_SERVICE_ACCOUNT_KEY`: O JSON completo da sua Service Account do Firebase.
+   - `X-Telegram-Bot-Api-Secret-Token`: Uma senha forte (idêntica à do seu webhook).
+4. Faça o **Deploy**.
+
+### 6. Configurando o Webhook (Obrigatório)
+Após o deploy, você precisa dizer ao Telegram para onde enviar as mensagens:
+1. Acesse o seu dashboard (Ex: `https://sua-app.vercel.app/dashboard/settings`).
+2. Clique em **"Update Webhook"** ou use o botão de configuração para salvar o token e a URL automaticamente.
+
+### 7. Garantindo Precisão no Timer (Opcional mas Recomendado)
 Para máxima confiabilidade e precisão de 1 minuto nos seus broadcasts:
 1. Crie uma conta gratuita em [cron-job.org](https://console.cron-job.org/signup).
 2. Crie um novo "Job" apontando para a URL do seu bot: `https://sua-app.vercel.app/api/cron`.
