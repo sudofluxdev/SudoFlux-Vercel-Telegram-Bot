@@ -26,9 +26,9 @@ export async function GET() {
     try {
         const now = new Date();
         // Since we are using Firestore Admin SDK via 'db', we must use its methods
+        // query only by status to avoid index requirement for composite queries
         const snapshot = await db.collection("scheduled_tasks")
             .where("status", "==", "pending")
-            .where("scheduled_at", "<=", now)
             .get();
 
         if (snapshot.empty) {
@@ -36,13 +36,25 @@ export async function GET() {
             return new Response("No tasks", { status: 200 });
         }
 
-        console.log(`Cron: Found ${snapshot.size} tasks to execute.`);
+        // Filter by date in memory
+        const tasksToRun = snapshot.docs.filter(doc => {
+            const data = doc.data();
+            const scheduledAt = data.scheduled_at?.toDate ? data.scheduled_at.toDate() : new Date(data.scheduled_at);
+            return scheduledAt <= now;
+        });
+
+        if (tasksToRun.length === 0) {
+            console.log("No tasks due yet.");
+            return new Response("No tasks due", { status: 200 });
+        }
+
+        console.log(`Cron: Found ${tasksToRun.length} tasks to execute.`);
 
         // PRE-FETCH TARGETS
         const userIds = await getAllLeads();
         const groupIds = await getAllGroups();
 
-        for (const taskDoc of snapshot.docs) {
+        for (const taskDoc of tasksToRun) {
             const task = taskDoc.data();
             const taskId = taskDoc.id;
             console.log(`Executing Task ${taskId} [Scope: ${task.scope}]`);
