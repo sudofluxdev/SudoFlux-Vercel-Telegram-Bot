@@ -9,8 +9,8 @@ export async function POST(req) {
         const body = await req.json();
 
         // Security Check
-        if (body.password !== "admin123") {
-            return NextResponse.json({ error: "Invalid password" }, { status: 401 });
+        if (body.password !== "YOUR_SECURE_PASSWORD") {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         if (!body.text && !body.image) {
@@ -29,8 +29,6 @@ export async function POST(req) {
         } else if (body.scope === 'group') {
             targets = groupIds;
         }
-
-        console.log(`📨 Broadcast [${body.scope}] to ${targets.length} targets.`);
 
         // --- PREPARE PAYLOAD ---
         const token = process.env.TELEGRAM_BOT_TOKEN;

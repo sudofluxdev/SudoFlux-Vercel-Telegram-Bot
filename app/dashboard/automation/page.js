@@ -1,4 +1,9 @@
 "use client";
+/**
+ * BotFlux V1.5 - Neural Intelligence Center
+ * 🤖 [PT] Gestão de comandos e automações inteligentes
+ * 🤖 [EN] Smart commands and automation management
+ */
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Save, Plus, Trash2, MessageSquare, Zap, Bot, Send, RefreshCw, Link as LinkIcon, ExternalLink, Command, Image as ImageIcon, Info, UploadCloud, XCircle, Clock, Edit2, LayoutGrid, MoreVertical, ShieldCheck, Shield } from "lucide-react";
@@ -6,7 +11,7 @@ import { db } from "@/lib/firebaseClient";
 import { doc, getDoc, setDoc, collection, getDocs, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { useToast } from "@/context/ToastContext";
 
-export default function BotCommandsPage() {
+export default function AutomationPage() {
     const { showToast } = useToast() || { showToast: () => { } };
     const [loading, setLoading] = useState(true);
 
@@ -16,11 +21,12 @@ export default function BotCommandsPage() {
     const [welcomeButtons, setWelcomeButtons] = useState([]);
     const [defaultReply, setDefaultReply] = useState("");
 
-    // --- AUTOMATIONS ---
     const [automations, setAutomations] = useState([]);
 
     // --- MODAL STATE ---
     const [isModalOpen, setIsModalOpen] = useState(false);
+    // [PT] Estados do formulário de criação de comando
+    // [EN] Command creation form states
     const [editingId, setEditingId] = useState(null); // null = creating new
 
     // --- FORM STATE (For Modal) ---
@@ -31,6 +37,7 @@ export default function BotCommandsPage() {
     const [formCooldown, setFormCooldown] = useState(0);
     const [formButtons, setFormButtons] = useState([]);
     const [formStrictSlash, setFormStrictSlash] = useState(true);
+    const [formMatchType, setFormMatchType] = useState("exact");
 
     // --- BTN BUILDER STATE (Inside Modal & Main Hub) ---
     const [btnLabel, setBtnLabel] = useState("");
@@ -127,9 +134,11 @@ export default function BotCommandsPage() {
             setFormCooldown(cmd.cooldown || 0);
             setFormButtons(cmd.buttons || []);
             setFormStrictSlash(cmd.strict_slash !== undefined ? cmd.strict_slash : true);
+            setFormMatchType(cmd.match_type || "exact");
         } else {
             setEditingId(null);
             setFormTrigger(""); setFormResponse(""); setFormImage(""); setFormScope("global"); setFormCooldown(0); setFormButtons([]); setFormStrictSlash(true);
+            setFormMatchType("exact");
         }
         setIsModalOpen(true);
     };
@@ -148,6 +157,7 @@ export default function BotCommandsPage() {
             image_url: formImage,
             buttons: formButtons,
             scope: formScope,
+            match_type: formMatchType,
             cooldown: Number(formCooldown),
             strict_slash: formStrictSlash,
             active: true,
@@ -194,11 +204,11 @@ export default function BotCommandsPage() {
             {/* HEADER */}
             <div className="mb-10 flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
-                        <Bot className="w-8 h-8 text-cyan-500" />
-                        Bot Commands
+                    <h1 className="text-4xl font-black mb-2 flex items-center gap-4 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500 tracking-tighter">
+                        <Bot className="w-10 h-10 text-cyan-500 animate-pulse" />
+                        Neural Intelligence Center
                     </h1>
-                    <p className="text-gray-400 text-sm">Design the behavior and intelligence of your bot.</p>
+                    <p className="text-gray-500 text-xs font-mono uppercase tracking-[0.3em]">Configure and optimize automation protocols.</p>
                 </div>
                 <button onClick={() => openModal()} className="bg-cyan-600 hover:bg-cyan-500 text-white rounded-full p-4 shadow-lg shadow-cyan-500/30 transition-all hover:scale-110 active:scale-95">
                     <Plus className="w-6 h-6" />
@@ -322,6 +332,9 @@ export default function BotCommandsPage() {
 
                                             <div className="flex items-center gap-2">
                                                 <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase border ${auto.scope === 'private' ? 'border-indigo-500/30 text-indigo-400' : 'border-gray-600 text-gray-500'}`}>{auto.scope || 'Global'}</span>
+                                                <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase border ${auto.match_type === 'keyword' ? 'border-amber-500/30 text-amber-500' : auto.match_type === 'regex' ? 'border-rose-500/30 text-rose-500' : 'border-cyan-500/30 text-cyan-500'}`}>
+                                                    {auto.match_type || 'Exact'}
+                                                </span>
                                                 {auto.cooldown > 0 && <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase border border-orange-500/30 text-orange-400 flex items-center gap-1"><Clock className="w-2.5 h-2.5" />{auto.cooldown}s</span>}
                                             </div>
                                         </div>
@@ -374,13 +387,23 @@ export default function BotCommandsPage() {
                                             <span className="text-[10px] font-bold uppercase tracking-wider">{formStrictSlash ? "Strict: Slash Mandatory" : "Flexible: Optional Slash"}</span>
                                         </button>
                                     </div>
-                                    <div>
-                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 block">Scope</label>
-                                        <select value={formScope} onChange={e => setFormScope(e.target.value)} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-cyan-500 outline-none appearance-none">
-                                            <option value="global">Global (All Chats)</option>
-                                            <option value="private">Private DM Only</option>
-                                            <option value="group">Groups Only</option>
-                                        </select>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 block">Match Logic</label>
+                                            <select value={formMatchType} onChange={e => setFormMatchType(e.target.value)} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-cyan-500 outline-none appearance-none">
+                                                <option value="exact">Exact (Commands /...)</option>
+                                                <option value="keyword">Keyword (Message contains...)</option>
+                                                <option value="regex">Regex (Advanced Pattern)</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 block">Scope</label>
+                                            <select value={formScope} onChange={e => setFormScope(e.target.value)} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-cyan-500 outline-none appearance-none">
+                                                <option value="global">Global (All Chats)</option>
+                                                <option value="private">Private DM Only</option>
+                                                <option value="group">Groups Only</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
 

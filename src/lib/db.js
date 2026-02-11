@@ -21,7 +21,9 @@ if (!getApps().length) {
 let db;
 try {
   db = getFirestore();
+  console.log("🔥 [DATABASE] Firestore initialized successfully.");
 } catch (e) {
+  console.error("❌ [DATABASE] Firestore initialization failed:", e.message);
   db = null;
 }
 
@@ -174,35 +176,34 @@ export const getStats = async () => {
 
 export const findAutomation = async (text) => {
   if (!text) return null;
-
-  // Normalize input
   const input = text.toLowerCase().trim();
+
+  const evaluateMatch = (rule, userInput) => {
+    if (!rule.active) return false;
+    const trigger = (rule.trigger || "").toLowerCase().trim();
+    const matchType = rule.match_type || "exact";
+
+    let processedInput = userInput;
+    if (userInput.includes("@")) {
+      processedInput = userInput.split("@")[0];
+    }
+
+    if (matchType === "keyword") return processedInput.includes(trigger);
+    if (matchType === "regex") {
+      try { return new RegExp(trigger, "i").test(processedInput); } catch (e) { return false; }
+    }
+
+    const triggerNoSlash = trigger.replace(/^\//, "");
+    const processedInputNoSlash = processedInput.replace(/^\//, "");
+    if (rule.strict_slash) return processedInput === trigger;
+    return processedInputNoSlash === triggerNoSlash;
+  };
 
   if (db) {
     try {
       const snapshot = await db.collection("automation").where("active", "==", true).get();
       const automations = snapshot.docs.map(doc => doc.data());
-      return automations.find(rule => {
-        const trigger = rule.trigger.toLowerCase().trim();
-        const triggerNoSlash = trigger.replace(/^\//, "");
-        const inputNoSlash = input.replace(/^\//, "");
-
-        // Handle @botname suffix (common in groups)
-        let processedInput = input;
-        if (input.includes("@")) {
-          processedInput = input.split("@")[0];
-        }
-        const processedInputNoSlash = processedInput.replace(/^\//, "");
-
-        if (rule.strict_slash) {
-          // Strict requires exact match with the trigger as saved
-          // but we should be flexible with the @botname part
-          return processedInput === trigger;
-        }
-
-        // Flexible: match ignoring leading slashes
-        return processedInputNoSlash === triggerNoSlash;
-      }) || null;
+      return automations.find(rule => evaluateMatch(rule, input)) || null;
     } catch (e) { }
   }
 
@@ -212,22 +213,7 @@ export const findAutomation = async (text) => {
     const data = await res.json();
     if (data.documents) {
       const automations = data.documents.map(doc => cleanRESTFields(doc.fields));
-      return automations.find(rule => {
-        if (!rule.active) return false;
-        const trigger = rule.trigger.toLowerCase().trim();
-        const triggerNoSlash = trigger.replace(/^\//, "");
-
-        let processedInput = input;
-        if (input.includes("@")) {
-          processedInput = input.split("@")[0];
-        }
-        const processedInputNoSlash = processedInput.replace(/^\//, "");
-
-        if (rule.strict_slash) {
-          return processedInput === trigger;
-        }
-        return processedInputNoSlash === triggerNoSlash;
-      }) || null;
+      return automations.find(rule => evaluateMatch(rule, input)) || null;
     }
   } catch (e) { }
   return null;
@@ -274,4 +260,37 @@ export const getAllAutomations = async () => {
   return [];
 };
 
+
+// --- CHAT HISTORY (MEMORY) ---
+
+export const saveChatMessage = async (chatId, role, text) => {
+  if (db) {
+    try {
+      await db.collection("chats").doc(String(chatId)).collection("messages").add({
+        role,
+        text,
+        created_at: FieldValue.serverTimestamp()
+      });
+    } catch (e) { console.error("Error saving chat message:", e); }
+  }
+};
+
+export const getChatHistory = async (chatId, limit = 10) => {
+  if (db) {
+    try {
+      const snapshot = await db.collection("chats")
+        .doc(String(chatId))
+        .collection("messages")
+        .orderBy("created_at", "desc")
+        .limit(limit)
+        .get();
+
+      return snapshot.docs.map(doc => doc.data()).reverse();
+    } catch (e) {
+      console.error("Error getting chat history:", e);
+      return [];
+    }
+  }
+  return [];
+};
 export { db };

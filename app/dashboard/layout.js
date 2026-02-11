@@ -16,7 +16,9 @@ import {
     Trash2,
     Clock,
     UserPlus,
-    X
+    X,
+    Sparkles,
+    Radio
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -86,8 +88,10 @@ export default function DashboardLayout({ children }) {
 
     const menuItems = [
         { name: "Overview", icon: LayoutDashboard, path: "/dashboard" },
+        { name: "Channels", icon: Radio, path: "/dashboard/channels" }, // Replaced Broadcast or added? Let's keep both or reorder
         { name: "Broadcast", icon: Send, path: "/dashboard/broadcast" },
         { name: "Bot Commands", icon: Command, path: "/dashboard/automation" },
+        { name: "AI Trainer", icon: Sparkles, path: "/dashboard/ai-trainer" },
         { name: "Groups", icon: Users, path: "/dashboard/groups" },
         { name: "Leads", icon: Users, path: "/dashboard/leads" },
         { name: "Settings", icon: Settings, path: "/dashboard/settings" },

@@ -32,23 +32,19 @@ export async function GET() {
             .get();
 
         if (snapshot.empty) {
-            console.log("No pending tasks.");
             return new Response("No tasks", { status: 200 });
         }
 
         // Filter by date in memory
         const tasksToRun = snapshot.docs.filter(doc => {
             const data = doc.data();
-            const scheduledAt = data.scheduled_at?.toDate ? data.scheduled_at.toDate() : new Date(data.scheduled_at);
-            return scheduledAt <= now;
+            const scheduled_at = data.scheduled_at?.toDate ? data.scheduled_at.toDate() : new Date(data.scheduled_at);
+            return scheduled_at <= now;
         });
 
         if (tasksToRun.length === 0) {
-            console.log("No tasks due yet.");
             return new Response("No tasks due", { status: 200 });
         }
-
-        console.log(`Cron: Found ${tasksToRun.length} tasks to execute.`);
 
         // PRE-FETCH TARGETS
         const userIds = await getAllLeads();

@@ -1,33 +1,34 @@
-"use client";
-import { useState, useEffect } from "react";
-import { Send, AlertCircle, CheckCircle2, Loader2, Zap, Calendar, Clock, Image as ImageIcon, XCircle, Users, Lock, Globe, Radio, Trash2, Repeat, Edit2, Info, Link, Plus } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useToast } from "@/context/ToastContext";
-import { db } from "@/lib/firebaseClient";
-import { addDoc, collection, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from "firebase/firestore";
+/**
+ * BotFlux V1.5 - Neural Blast Broadcast
+ * 🚀 [PT] Sistema de disparo em massa com agendamento inteligente
+ * 🚀 [EN] Mass messaging system with smart scheduling
+ */
 
 export default function BroadcastPage() {
     const { showToast } = useToast() || { showToast: () => { } };
 
-    // --- STATE: EDITOR ---
+    // [PT] Estados do Editor e Agendamento
+    // [EN] Editor and Scheduling States
     const [editingId, setEditingId] = useState(null);
     const [message, setMessage] = useState("");
     const [status, setStatus] = useState("idle");
     const [result, setResult] = useState(null);
     const [broadcastImage, setBroadcastImage] = useState("");
-    const [targetScope, setTargetScope] = useState("global"); // global, private, group
+    const [targetScope, setTargetScope] = useState("global"); // [PT] global, privado, grupo | [EN] global, private, group
 
-    // --- STATE: BUTTONS ---
-    const [buttons, setButtons] = useState([]); // Array of { label, url }
+    // [PT] Gerenciamento de Botões Inline
+    // [EN] Inline Button Management
+    const [buttons, setButtons] = useState([]);
     const [btnLabel, setBtnLabel] = useState("");
     const [btnUrl, setBtnUrl] = useState("");
     const [showBtnInput, setShowBtnInput] = useState(false);
 
-    // --- STATE: SCHEDULING ---
+    // [PT] Configuração de Recorrência
+    // [EN] Recurrence Configuration
     const [isScheduled, setIsScheduled] = useState(false);
     const [scheduleDate, setScheduleDate] = useState("");
     const [scheduleTime, setScheduleTime] = useState("");
-    const [repeatFreq, setRepeatFreq] = useState("once"); // once, daily, weekly, custom
+    const [repeatFreq, setRepeatFreq] = useState("once"); // [PT] uma vez, diário, semanal, custom | [EN] once, daily, weekly, custom
     const [customInterval, setCustomInterval] = useState(30); // minutes
 
     // --- STATE: LOGS ---
@@ -199,11 +200,11 @@ export default function BroadcastPage() {
             {/* HEADER */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
-                        <Radio className="w-8 h-8 text-indigo-500" />
-                        Global Signal Broadcast
+                    <h1 className="text-4xl font-black mb-2 flex items-center gap-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500 tracking-tighter">
+                        <Radio className="w-10 h-10 text-indigo-500 animate-pulse" />
+                        Neural Blast Broadcast
                     </h1>
-                    <p className="text-gray-400 text-sm">Mass communication array for active leads.</p>
+                    <p className="text-gray-500 text-xs font-mono uppercase tracking-[0.3em]">Massive transmission array for biological nodes.</p>
                 </div>
             </div>
 
