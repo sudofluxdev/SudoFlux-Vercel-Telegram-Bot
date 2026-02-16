@@ -1,4 +1,4 @@
-# 🛰️ SudoSquad - Telegram Matrix System (V1.5)
+# 🛰️ SudoFlux - Telegram Matrix System (V1.5)
 
 <div align="center">
   <img src="https://img.shields.io/badge/Version-FREE-green?style=for-the-badge&logo=github" alt="Free Version">
@@ -13,7 +13,7 @@
 
 ---
 
-SudoSquad is a professional-grade infrastructure for high-performance Telegram automation. This is the community **free version**, designed to be scalable and 100% free to host.
+SudoFlux is a professional-grade infrastructure for high-performance Telegram automation. This is the community **free version**, designed to be scalable and 100% free to host.
 
 ## 🚀 Elite Features
 - **Telegram Hub**: Centralized management for Channels and Transmissions.
