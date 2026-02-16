@@ -25,8 +25,8 @@ import { doc, onSnapshot } from "firebase/firestore";
 
 /**
  * BotFlux V1.5 - Channel Management Hub
- * 🛰️ [PT] Painel de Controle Omnichannel (Telegram & WhatsApp)
- * 🛰️ [EN] Omnichannel Control Panel (Telegram & WhatsApp)
+ * 🛰️ [PT] Painel de Controle de Transmissão (Telegram)
+ * 🛰️ [EN] Transmission Control Panel (Telegram)
  */
 export default function ChannelsPage() {
     const { showToast } = useToast() || { showToast: () => { } };
@@ -70,7 +70,7 @@ export default function ChannelsPage() {
                     </h1>
                     <p className="text-gray-500 mt-2 font-mono text-xs uppercase tracking-[0.3em] flex items-center gap-3">
                         <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse" />
-                        Omnichannel Matrix : [ACTIVE]
+                        Neural Matrix : [ACTIVE]
                     </p>
                 </div>
                 <button
@@ -141,67 +141,6 @@ export default function ChannelsPage() {
                         <button className="w-14 h-14 bg-white/5 hover:bg-white/10 text-gray-400 border border-white/10 rounded-2xl flex items-center justify-center transition-all">
                             <Lock className="w-5 h-5" />
                         </button>
-                    </div>
-                </motion.div>
-
-                {/* WHATSAPP CARD (Placeholder / Coming Soon) */}
-                <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="group relative bg-[#0a0a0a] border border-white/5 rounded-[3rem] p-10 overflow-hidden shadow-2xl"
-                >
-                    <div className="absolute top-0 right-0 p-32 bg-emerald-500/5 rounded-full blur-3xl -z-10 group-hover:bg-emerald-500/10 transition-all" />
-
-                    <div className="flex items-center justify-between mb-10">
-                        <div className="flex items-center gap-5">
-                            <div className="w-14 h-14 rounded-2xl bg-emerald-600/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-500/10">
-                                <Smartphone className="w-8 h-8" />
-                            </div>
-                            <div>
-                                <h3 className="text-2xl font-black text-white tracking-tight">WhatsApp Link</h3>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <span className="w-2 h-2 rounded-full bg-gray-700" />
-                                    <span className="text-[10px] text-gray-500 font-mono font-bold uppercase tracking-widest">Idle Unit</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="px-4 py-2 bg-emerald-500/5 border border-emerald-500/10 rounded-xl text-[10px] font-mono text-emerald-600 font-bold uppercase tracking-widest">
-                            DeepSync Enabled
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col items-center justify-center py-6 mb-6">
-                        <div className="relative w-40 h-40 bg-white shadow-2xl rounded-3xl flex items-center justify-center group/qr cursor-pointer hover:scale-105 transition-transform">
-                            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm rounded-3xl flex flex-col items-center justify-center opacity-0 group-hover/qr:opacity-100 transition-opacity z-10 text-center p-4">
-                                <Zap className="w-8 h-8 text-emerald-400 mb-2" />
-                                <p className="text-[10px] font-bold text-white uppercase tracking-widest">Click to Generate Session</p>
-                            </div>
-                            <QrCode className="w-32 h-32 text-gray-300" />
-                        </div>
-                        <p className="mt-6 text-[10px] font-bold text-gray-600 uppercase tracking-[0.2em]">Scan to authenticate biological chip</p>
-                    </div>
-
-                    <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-2xl p-5 mb-10">
-                        <div className="flex items-start gap-4">
-                            <ShieldCheck className="w-5 h-5 text-emerald-400 mt-1" />
-                            <div className="space-y-1">
-                                <p className="text-xs font-bold text-white uppercase tracking-tight">Anti-Ban Protocols</p>
-                                <p className="text-[10px] text-gray-500 leading-relaxed font-medium">Smart human-behavior simulation avoids detection from aggressive Meta algorithms.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                        <button className="flex-1 h-14 bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-400 border border-emerald-500/20 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all">
-                            Configure WP Unit
-                        </button>
-                        <button className="w-14 h-14 bg-white/5 hover:bg-white/10 text-gray-400 border border-white/10 rounded-2xl flex items-center justify-center transition-all">
-                            <Info className="w-5 h-5" />
-                        </button>
-                    </div>
-
-                    <div className="absolute top-4 left-4">
-                        <span className="bg-amber-500 text-black text-[8px] font-black px-2 py-0.5 rounded tracking-widest uppercase">Experimental</span>
                     </div>
                 </motion.div>
             </div>

@@ -1,8 +1,35 @@
-/**
- * BotFlux V1.5 - Neural Blast Broadcast
- * 🚀 [PT] Sistema de disparo em massa com agendamento inteligente
- * 🚀 [EN] Mass messaging system with smart scheduling
- */
+"use client";
+import {
+    Radio,
+    Send,
+    Edit2,
+    XCircle,
+    Plus,
+    ImageIcon,
+    Globe,
+    Users,
+    Lock,
+    Calendar,
+    Zap,
+    Loader2,
+    Clock,
+    Repeat,
+    Trash2,
+    Info
+} from "lucide-react";
+import { useState, useEffect } from "react";
+import { db } from "@/lib/firebaseClient";
+import {
+    collection,
+    query,
+    orderBy,
+    onSnapshot,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    doc
+} from "firebase/firestore";
+import { useToast } from "@/context/ToastContext";
 
 export default function BroadcastPage() {
     const { showToast } = useToast() || { showToast: () => { } };

@@ -257,17 +257,13 @@ export default function Dashboard() {
 
                     <div className="w-full space-y-4">
                         <div className="flex items-center justify-between text-[10px] font-bold text-gray-500 uppercase tracking-widest px-2">
-                            <span>Omnichannel Mix</span>
+                            <span>Telegram Stability</span>
                             <span className="text-cyan-400">Sync Active</span>
                         </div>
                         <div className="flex gap-2">
                             <div className="flex-1 h-12 bg-blue-600/10 border border-blue-500/20 rounded-xl flex flex-col items-center justify-center">
-                                <span className="text-[8px] text-blue-400 uppercase font-black">Telegram</span>
-                                <span className="text-sm font-black text-white">85%</span>
-                            </div>
-                            <div className="flex-1 h-12 bg-emerald-600/5 border border-emerald-500/10 rounded-xl flex flex-col items-center justify-center opacity-50">
-                                <span className="text-[8px] text-emerald-500 uppercase font-black">WhatsApp</span>
-                                <span className="text-sm font-black text-white">15%</span>
+                                <span className="text-[8px] text-blue-400 uppercase font-black">Transmission Array</span>
+                                <span className="text-sm font-black text-white">ACTIVE</span>
                             </div>
                         </div>
                     </div>

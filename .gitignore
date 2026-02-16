@@ -17,7 +17,6 @@ build/
 .env.production.local
 .env.development.local
 .env.test.local
-.env.example
 
 # Misc
 .DS_Store
@@ -29,5 +28,3 @@ build/
 # SudoSquad
 .sudosquad/
 security.js
-
-.vercel
