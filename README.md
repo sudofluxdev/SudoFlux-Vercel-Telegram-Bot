@@ -80,4 +80,6 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 ---
 
 ## 🌎 International Market
+
+## 🌎 International Market
 For documentation in English, please access [README_EN.md](README_EN.md).
