@@ -80,6 +80,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ---
 
 ## 🌎 International Market
-
-## 🌎 International Market
 For documentation in Portuguese, please access [README.md](README.md).
