@@ -60,6 +60,12 @@ X-Telegram-Bot-Api-Secret-Token="CREATE_A_SECURE_PASSWORD"
 1. After deployment, go to `https://your-domain.vercel.app/dashboard/settings`.
 2. Click **"Update Webhook"**. The system will automatically send your Vercel URL to Telegram.
 
+### 6. Cron Job (Scheduling & Wake up)
+To ensure scheduled broadcasts (Smart Broadcast) work and keep the bot "awake":
+1. Use a Cron service (recommended: [cron-job.org](https://cron-job.org)).
+2. Configure a **GET** request to `https://your-domain.vercel.app/api/cron`.
+3. Set the frequency to **every 1 minute**.
+
 ---
 
 ## 💎 Custom Version & Support
